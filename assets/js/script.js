@@ -7,6 +7,7 @@ var todayTemp = $("#today-temp");
 var todayWind = $("#today-wind");
 var todayHumidity = $("#today-humidity");
 var idFutureDayList = ["#first-day", "#second-day", "#third-day", "#fourth-day", "#fifth-day"];
+var cityBtnList = [];
 
 var citySearch = function () {
     var requestURL = "https://api.openweathermap.org/data/2.5/forecast" + "?q=" + cityInput.val() + "&appid=" + apiKey;
@@ -31,11 +32,14 @@ var citySearch = function () {
         })
         .then(function (data) {
             updateTodayCard(data, cityInput.val());
+            if (!cityBtnList.includes(cityInput.val())) {
+            cityBtnList.push(cityInput.val());
             var cityBtnElement = $("<button></button>").html(cityInput.val());
             cityBtnElement.addClass("btn btn-secondary btn-padding");
             cityList.append(cityBtnElement);
             cityBtnElement.click(cityBtn);
             listOfBtns(cityInput.val());
+            }
         })
 }
 
@@ -79,6 +83,7 @@ function checkLocalStorage() {
     if (localStorageValue) {
         var parsedValue = JSON.parse(localStorageValue);
         for (city in parsedValue) {
+            cityBtnList.push(parsedValue[city]);
             var cityBtnElement = $("<button></button>").html(parsedValue[city]);
             cityBtnElement.addClass("btn btn-secondary btn-padding");
             cityList.append(cityBtnElement);
@@ -89,8 +94,8 @@ function checkLocalStorage() {
 
 function cityBtn(event) {
     var btnText = event.target.innerHTML
-    var requestURL = "https://api.openweathermap.org/data/2.5/forecast" + "?q=" + cityInput.val() + "&appid=" + apiKey;
-    var todayURL = "https://api.openweathermap.org/data/2.5/weather" + "?q=" + cityInput.val() + "&appid=" + apiKey;
+    var requestURL = "https://api.openweathermap.org/data/2.5/forecast" + "?q=" + btnText + "&appid=" + apiKey;
+    var todayURL = "https://api.openweathermap.org/data/2.5/weather" + "?q=" + btnText + "&appid=" + apiKey;
     fetch(requestURL)
         .then(function (response) {
             return response.json();
