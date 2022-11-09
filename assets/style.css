@@ -24,6 +24,20 @@ aside div {
     padding: 0 20px;
 }
 
+#city-list {
+    height: 72vh;
+    overflow-y: scroll;
+}
+
+.btn-padding {
+    margin-bottom: 15px;
+}
+
+#line {
+    margin: 20px;
+    border-top: 2px lightgrey solid;
+}
+
 section {
     width: 75vw;
     padding-top: 10px;
