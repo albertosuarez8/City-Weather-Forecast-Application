@@ -1,3 +1,4 @@
+var apiKey = "506cdd229659f05510c67db0a4c3f0d4"
 var cityInput = $("#city-input");
 var cityList = $("#city-list");
 var searchBtn = $("#search-btn");
@@ -8,31 +9,38 @@ var todayHumidity = $("#today-humidity");
 var idFutureDayList = ["#first-day", "#second-day", "#third-day", "#fourth-day", "#fifth-day"];
 
 var citySearch = function () {
-    var requestURL = "https://api.openweathermap.org/data/2.5/forecast" + "?q=" + cityInput.val() + "&appid=" + config.apiKey;
-    var todayURL = "https://api.openweathermap.org/data/2.5/weather" + "?q=" + cityInput.val() + "&appid=" + config.apiKey;
+    var requestURL = "https://api.openweathermap.org/data/2.5/forecast" + "?q=" + cityInput.val() + "&appid=" + apiKey;
+    var todayURL = "https://api.openweathermap.org/data/2.5/weather" + "?q=" + cityInput.val() + "&appid=" + apiKey;
     fetch(requestURL)
-    .then(function (response) {
-        return response.json();
-    })
-    .then(function (data) {
-        fiveDayForecastCards(data.list);
-    })
+        .then(function (response) {
+            if (!response.ok) {
+                throw response.json();
+            }
+            return response.json();
+        })
+        .then(function (data) {
+            fiveDayForecastCards(data.list);
+        })
     fetch(todayURL)
-    .then(function (response) {
-        return response.json();
-    })
-    .then(function (data) {
-        updateTodayCard(data, cityInput.val());
-    })
-    var cityBtnElement = $("<button></button>").html(cityInput.val());
-    cityBtnElement.addClass("btn btn-secondary btn-padding");
-    cityList.append(cityBtnElement);
+        .then(function (response) {
+            if (!response.ok) {
+                alert("Invalid City Name")
+                throw response.json();
+            }
+            return response.json();
+        })
+        .then(function (data) {
+            updateTodayCard(data, cityInput.val());
+            var cityBtnElement = $("<button></button>").html(cityInput.val());
+            cityBtnElement.addClass("btn btn-secondary btn-padding");
+            cityList.append(cityBtnElement);
+        })
 }
 
 function updateTodayCard(values, name) {
     var today = moment().format("M/D/YYYY");
     todayCityDate.html(name + " " + today);
-    todayTemp.html("Temp: " + convertKelvinToF(values.main.temp) + "°F" );
+    todayTemp.html("Temp: " + convertKelvinToF(values.main.temp) + "°F");
     todayWind.html("Wind: " + values.wind.speed + " MPH");
     todayHumidity.html("Humidity: " + values.main.humidity + " %");
 }
