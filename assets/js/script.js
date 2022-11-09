@@ -34,6 +34,8 @@ var citySearch = function () {
             var cityBtnElement = $("<button></button>").html(cityInput.val());
             cityBtnElement.addClass("btn btn-secondary btn-padding");
             cityList.append(cityBtnElement);
+            cityBtnElement.click(cityBtn);
+            listOfBtns(cityInput.val());
         })
 }
 
@@ -61,4 +63,49 @@ function convertKelvinToF(temp) {
     return (1.8 * (temp - 273) + 32).toFixed(2);
 }
 
+function listOfBtns(textValue) {
+    var localStorageValue = localStorage.getItem("buttons");
+    if (localStorageValue) {
+        var parsedValue = JSON.parse(localStorageValue);
+        parsedValue.push(textValue)
+        localStorage.setItem("buttons", JSON.stringify([textValue]));
+    } else {
+        localStorage.setItem("buttons", JSON.stringify([textValue]));
+    }
+}
+
+function checkLocalStorage() {
+    var localStorageValue = localStorage.getItem("buttons");
+    if (localStorageValue) {
+        var parsedValue = JSON.parse(localStorageValue);
+        for (city in parsedValue) {
+            var cityBtnElement = $("<button></button>").html(parsedValue[city]);
+            cityBtnElement.addClass("btn btn-secondary btn-padding");
+            cityList.append(cityBtnElement);
+            cityBtnElement.click(cityBtn);
+        }
+    }
+}
+
+function cityBtn(event) {
+    var btnText = event.target.innerHTML
+    var requestURL = "https://api.openweathermap.org/data/2.5/forecast" + "?q=" + cityInput.val() + "&appid=" + apiKey;
+    var todayURL = "https://api.openweathermap.org/data/2.5/weather" + "?q=" + cityInput.val() + "&appid=" + apiKey;
+    fetch(requestURL)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            fiveDayForecastCards(data.list);
+        })
+    fetch(todayURL)
+        .then(function (response) {
+            return response.json();
+        })
+        .then(function (data) {
+            updateTodayCard(data, btnText);
+        })
+}
+
+checkLocalStorage();
 searchBtn.click(citySearch);
