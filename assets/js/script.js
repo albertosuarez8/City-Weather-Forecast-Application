@@ -31,21 +31,22 @@ var citySearch = function () {
             return response.json();
         })
         .then(function (data) {
+            var cityInputLowercase = cityInput.val().toLowerCase()
             updateTodayCard(data, cityInput.val());
-            if (!cityBtnList.includes(cityInput.val())) {
-            cityBtnList.push(cityInput.val());
-            var cityBtnElement = $("<button></button>").html(cityInput.val());
-            cityBtnElement.addClass("btn btn-secondary btn-padding");
-            cityList.append(cityBtnElement);
-            cityBtnElement.click(cityBtn);
-            listOfBtns(cityInput.val());
+            if (!cityBtnList.includes(cityInputLowercase)) {
+                cityBtnList.push(cityInputLowercase);
+                var cityBtnElement = $("<button></button>").html(cityInput.val().charAt(0).toUpperCase() + cityInput.val().slice(1).toLowerCase());
+                cityBtnElement.addClass("btn btn-secondary btn-padding");
+                cityList.append(cityBtnElement);
+                cityBtnElement.click(cityBtn);
+                listOfBtns(cityInputLowercase);
             }
         })
 }
 
 function updateTodayCard(values, name) {
     var today = moment().format("M/D/YYYY");
-    todayCityDate.html(name + " " + today);
+    todayCityDate.html(name.charAt(0).toUpperCase() + name.slice(1).toLowerCase() + " " + today);
     todayTemp.html("Temp: " + convertKelvinToF(values.main.temp) + "°F");
     todayWind.html("Wind: " + values.wind.speed + " MPH");
     todayHumidity.html("Humidity: " + values.main.humidity + " %");
@@ -67,14 +68,14 @@ function convertKelvinToF(temp) {
     return (1.8 * (temp - 273) + 32).toFixed(2);
 }
 
-function listOfBtns(textValue) {
+function listOfBtns(cityInputLowercase) {
     var localStorageValue = localStorage.getItem("buttons");
     if (localStorageValue) {
         var parsedValue = JSON.parse(localStorageValue);
-        parsedValue.push(textValue)
-        localStorage.setItem("buttons", JSON.stringify([textValue]));
+        parsedValue.push(cityInputLowercase)
+        localStorage.setItem("buttons", JSON.stringify(parsedValue));
     } else {
-        localStorage.setItem("buttons", JSON.stringify([textValue]));
+        localStorage.setItem("buttons", JSON.stringify([cityInputLowercase]));
     }
 }
 
@@ -84,7 +85,7 @@ function checkLocalStorage() {
         var parsedValue = JSON.parse(localStorageValue);
         for (city in parsedValue) {
             cityBtnList.push(parsedValue[city]);
-            var cityBtnElement = $("<button></button>").html(parsedValue[city]);
+            var cityBtnElement = $("<button></button>").html(parsedValue[city].charAt(0).toUpperCase() + parsedValue[city].slice(1).toLowerCase());
             cityBtnElement.addClass("btn btn-secondary btn-padding");
             cityList.append(cityBtnElement);
             cityBtnElement.click(cityBtn);
