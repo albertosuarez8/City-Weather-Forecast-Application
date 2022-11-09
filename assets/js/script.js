@@ -8,6 +8,7 @@ var todayWind = $("#today-wind");
 var todayHumidity = $("#today-humidity");
 var idFutureDayList = ["#first-day", "#second-day", "#third-day", "#fourth-day", "#fifth-day"];
 var cityBtnList = [];
+var clearHistoryBtn = $("#clear-btn");
 
 var citySearch = function () {
     var requestURL = "https://api.openweathermap.org/data/2.5/forecast" + "?q=" + cityInput.val() + "&appid=" + apiKey;
@@ -115,3 +116,7 @@ function cityBtn(event) {
 
 checkLocalStorage();
 searchBtn.click(citySearch);
+clearHistoryBtn.click(function() {
+    localStorage.clear();
+    location.reload();
+});

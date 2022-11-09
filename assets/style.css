@@ -24,6 +24,10 @@ aside div {
     padding: 0 20px;
 }
 
+#clear-btn {
+    margin-top: 10px;
+}
+
 #city-list {
     height: 72vh;
     overflow-y: scroll;
