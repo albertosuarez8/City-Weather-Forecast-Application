@@ -5,6 +5,7 @@ var todayCityDate = $("#today-city-date");
 var todayTemp = $("#today-temp");
 var todayWind = $("#today-wind");
 var todayHumidity = $("#today-humidity");
+var idFutureDayList = ["#first-day", "#second-day", "#third-day", "#fourth-day", "#fifth-day"];
 
 var citySearch = function () {
     var requestURL = "https://api.openweathermap.org/data/2.5/forecast" + "?q=" + cityInput.val() + "&appid=" + config.apiKey;
@@ -14,7 +15,7 @@ var citySearch = function () {
         return response.json();
     })
     .then(function (data) {
-        console.log(data);
+        fiveDayForecastCards(data.list);
     })
     fetch(todayURL)
     .then(function (response) {
@@ -22,7 +23,6 @@ var citySearch = function () {
     })
     .then(function (data) {
         updateTodayCard(data, cityInput.val());
-        console.log(data);
     })
     var cityBtnElement = $("<button></button>").html(cityInput.val());
     cityBtnElement.addClass("btn btn-secondary btn-padding");
@@ -35,6 +35,18 @@ function updateTodayCard(values, name) {
     todayTemp.html("Temp: " + convertKelvinToF(values.main.temp) + "°F" );
     todayWind.html("Wind: " + values.wind.speed + " MPH");
     todayHumidity.html("Humidity: " + values.main.humidity + " %");
+}
+
+function fiveDayForecastCards(values) {
+    var temp = 0
+    for (let i = 5; i < values.length; i++) {
+        $(idFutureDayList[temp] + "-title").html(moment().add(temp + 1, "days").format("M/D/YYYY"));
+        $(idFutureDayList[temp] + "-temp").html("Temp: " + convertKelvinToF(values[i].main.temp) + "°F");
+        $(idFutureDayList[temp] + "-wind").html("Wind: " + values[i].wind.speed + " MPH");
+        $(idFutureDayList[temp] + "-humidity").html("Humidity: " + values[i].main.humidity + " %");
+        temp++;
+        i = i + 7;
+    }
 }
 
 function convertKelvinToF(temp) {
