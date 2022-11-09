@@ -51,6 +51,9 @@ function updateTodayCard(values, name) {
     todayTemp.html("Temp: " + convertKelvinToF(values.main.temp) + "°F");
     todayWind.html("Wind: " + values.wind.speed + " MPH");
     todayHumidity.html("Humidity: " + values.main.humidity + " %");
+    var imgElement = $("<img></img>")
+    imgElement.attr("src", "./assets/images/" + values.weather[0].icon + ".png");
+    todayCityDate.append(imgElement);
 }
 
 function fiveDayForecastCards(values) {
@@ -60,6 +63,9 @@ function fiveDayForecastCards(values) {
         $(idFutureDayList[temp] + "-temp").html("Temp: " + convertKelvinToF(values[i].main.temp) + "°F");
         $(idFutureDayList[temp] + "-wind").html("Wind: " + values[i].wind.speed + " MPH");
         $(idFutureDayList[temp] + "-humidity").html("Humidity: " + values[i].main.humidity + " %");
+        var imgElement = $("<img></img>")
+        imgElement.attr("src", "./assets/images/" + values[i].weather[0].icon + ".png");
+        $(idFutureDayList[temp] + "-title").append(imgElement);
         temp++;
         i = i + 7;
     }
@@ -116,7 +122,7 @@ function cityBtn(event) {
 
 checkLocalStorage();
 searchBtn.click(citySearch);
-clearHistoryBtn.click(function() {
+clearHistoryBtn.click(function () {
     localStorage.clear();
     location.reload();
 });
