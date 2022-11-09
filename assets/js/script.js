@@ -34,6 +34,7 @@ var citySearch = function () {
         .then(function (data) {
             var cityInputLowercase = cityInput.val().toLowerCase()
             updateTodayCard(data, cityInput.val());
+            // Checks if this button has been created before to avoid duplicates
             if (!cityBtnList.includes(cityInputLowercase)) {
                 cityBtnList.push(cityInputLowercase);
                 var cityBtnElement = $("<button></button>").html(cityInput.val().charAt(0).toUpperCase() + cityInput.val().slice(1).toLowerCase());
@@ -56,6 +57,7 @@ function updateTodayCard(values, name) {
     todayCityDate.append(imgElement);
 }
 
+// This for loop was created to avoid DRY code, the index starts at five and is added by 8 to grab the next day's weather
 function fiveDayForecastCards(values) {
     var temp = 0
     for (let i = 5; i < values.length; i++) {
@@ -100,6 +102,7 @@ function checkLocalStorage() {
     }
 }
 
+// Runs API again when a user clicks on a city button to grab current weather and the forecasted weather
 function cityBtn(event) {
     var btnText = event.target.innerHTML
     var requestURL = "https://api.openweathermap.org/data/2.5/forecast" + "?q=" + btnText + "&appid=" + apiKey;
